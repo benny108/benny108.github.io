@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><meta name="theme-color" content="#f4f5f2"><meta name="description" content="The goal is not to ask two agents the same question. It is to assign different clinical risks: one prioritizes recall, while the other controls false positives."><meta name="author" content="Bin Huang"><link rel="canonical" href="https://benny108.github.io/en/writing/radad-deep-dive/"><link rel="alternate" hreflang="zh-CN" href="https://benny108.github.io/zh/writing/radad-deep-dive/"><link rel="alternate" hreflang="en" href="https://benny108.github.io/en/writing/radad-deep-dive/"><link rel="alternate" hreflang="x-default" href="https://benny108.github.io/zh/"><link rel="icon" href="/favicon.png" type="image/png"><link rel="alternate" type="application/rss+xml" title="Why Medical Report Generation Needs Role-Asymmetric Agents｜Bin Huang RSS" href="/en/rss.xml"><meta property="og:type" content="article"><meta property="og:title" content="Why Medical Report Generation Needs Role-Asymmetric Agents｜Bin Huang"><meta property="og:description" content="The goal is not to ask two agents the same question. It is to assign different clinical risks: one prioritizes recall, while the other controls false positives."><meta property="og:url" content="https://benny108.github.io/en/writing/radad-deep-dive/"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://benny108.github.io/og.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Why Medical Report Generation Needs Role-Asymmetric Agents｜Bin Huang"><meta name="twitter:description" content="The goal is not to ask two agents the same question. It is to assign different clinical risks: one prioritizes recall, while the other controls false positives."><meta name="twitter:image" content="https://benny108.github.io/og.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Bin Huang","alternateName":"黄彬","jobTitle":"LLM & Agent Research Engineer","email":"mailto:1084893712@qq.com","affiliation":{"@type":"CollegeOrUniversity","name":"Zhengzhou University"},"sameAs":["https://github.com/benny108","https://www.zhihu.com/people/42-29-40-28","https://space.bilibili.com/3493106871700084"],"url":"https://benny108.github.io"}</script><title>Why Medical Report Generation Needs Role-Asymmetric Agents｜Bin Huang</title><link rel="stylesheet" href="/_astro/global.BSG0MS1y.css"></head><body><a class="skip-link" href="#main-content">Skip to content</a><header class="site-header"><div class="shell header-inner"><a class="brand" href="/en/" aria-label="Bin Huang home"><span class="brand-mark">HB</span><span class="brand-copy"><strong>Bin Huang</strong><small>LLM · AGENT · RESEARCH</small></span></a><nav class="desktop-nav" aria-label="Main navigation"><a href="/en/">Home</a><a href="/en/research/">Research</a><a href="/en/projects/">Projects</a><a href="/en/writing/" aria-current="page">Writing</a><a href="/en/about/">About</a></nav><div class="header-actions"><a class="language-switch" href="/zh/writing/radad-deep-dive/" data-lang-switch data-target-lang="zh" aria-label="切换到中文"><span class>中</span><i>/</i><span class="active">EN</span></a><button class="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Open navigation"><span></span><span></span></button></div></div><nav id="mobile-menu" class="mobile-nav" data-mobile-menu aria-label="Mobile navigation"><div class="shell"><a href="/en/">Home</a><a href="/en/research/">Research</a><a href="/en/projects/">Projects</a><a href="/en/writing/" aria-current="page">Writing</a><a href="/en/about/">About</a></div></nav></header><main id="main-content"><header class="detail-lede"><div class="shell"><div class="kicker">2026-07-30 · 8 MIN</div><h1>Why Medical Report Generation Needs Role-Asymmetric Agents</h1><p>The goal is not to ask two agents the same question. It is to assign different clinical risks: one prioritizes recall, while the other controls false positives.</p><div class="detail-metrics"><span>#Multi-Agent</span><span>#Medical AI</span><span>#RAG</span></div></div></header><section class="content-page"><div class="shell article-shell"><article class="prose"><p>A single LLM response often collapses two conflicting objectives: finding as many abnormalities as possible while avoiding unsupported diagnoses. In chest CT reporting, this is not merely a writing-quality issue; it is a clinical trade-off between recall and precision.</p>
+<h2 id="why-symmetric-debate-is-insufficient">Why symmetric debate is insufficient</h2>
+<p>When two agents share the same prompt, objective, and evidence, their outputs become highly correlated. The conversation looks like debate but behaves like repeated sampling. RADAD creates an explicit role difference: a recall-oriented agent searches for missed findings, while a conservative agent challenges weak evidence and over-interpretation.</p>
+<h2 id="shared-evidence-anchors">Shared evidence anchors</h2>
+<p>The system encodes CT images with BiomedCLIP and retrieves visually similar cases from a FAISS index. Both agents see the same cases but interpret them under different risk preferences. The discussion is therefore grounded in inspectable evidence rather than linguistic intuition.</p>
+<h2 id="bounded-interaction">Bounded interaction</h2>
+<p>RADAD uses only three image calls and four text-only interaction steps. The limit focuses the protocol on finding, challenging, and revising claims—and makes inference cost measurable.</p>
+<h2 id="interpreting-the-outcome">Interpreting the outcome</h2>
+<p>BLEU-4 improved from 0.122 to 0.260, while Macro-F1 increased from 0.368 to 0.437. The transferable insight is broader than the metrics: identify conflicting objectives first, then design distinct roles, shared evidence, and explicit stopping conditions.</p>
+<blockquote>
+<p>This article explains only the public method and sanitized results. The manuscript under review is not distributed.</p>
+</blockquote></article><aside class="article-meta"><dl><dt>Author</dt><dd>Bin Huang</dd><dt>Published</dt><dd>2026-07-30</dd><dt>Reading time</dt><dd>8 min</dd><dt>Topics</dt><dd>Multi-Agent · Medical AI · RAG</dd></dl></aside></div></section><section class="contact-panel shell"><div><div class="kicker">CONTACT</div><h2>Looking for someone who can move research toward results?</h2><p>Let’s discuss LLM / Agent internships, research collaboration, technical projects, or future PhD opportunities.</p></div><div class="contact-actions"><a class="contact-link primary" href="mailto:1084893712@qq.com"><span>Email</span><strong>1084893712@qq.com</strong></a><a class="contact-link" href="https://github.com/benny108" target="_blank" rel="noreferrer"><span>GitHub</span><strong>github.com/benny108 ↗</strong></a><button class="contact-link" type="button" data-copy-wechat data-normal-label="Copy WeChat ID · bennyjob" data-copied-label="Copied bennyjob">Copy WeChat ID · bennyjob</button></div></section></main><footer class="site-footer"><div class="shell footer-grid"><div><div class="footer-name">Bin Huang</div><p>Research, engineering, and real-world outcomes.</p></div><div class="footer-links"><a href="mailto:1084893712@qq.com">Email</a><a href="https://github.com/benny108" target="_blank" rel="noreferrer">GitHub</a><a href="https://www.zhihu.com/people/42-29-40-28" target="_blank" rel="noreferrer">Zhihu</a><a href="https://space.bilibili.com/3493106871700084" target="_blank" rel="noreferrer">Bilibili</a></div><div class="footer-legal"><span>© 2026 Bin Huang</span><span>Code MIT · Content &amp; assets reserved</span></div></div></footer><script>
+      const menuButton = document.querySelector("[data-menu-toggle]");
+      const menu = document.querySelector("[data-mobile-menu]");
+      menuButton?.addEventListener("click", () => {
+        const isOpen = menuButton.getAttribute("aria-expanded") === "true";
+        menuButton.setAttribute("aria-expanded", String(!isOpen));
+        menu?.toggleAttribute("data-open", !isOpen);
+      });
+
+      document.querySelectorAll("[data-lang-switch]").forEach((link) => {
+        link.addEventListener("click", () => {
+          const target = link.getAttribute("data-target-lang");
+          if (target) localStorage.setItem("hb-locale", target);
+        });
+      });
+
+      document.querySelectorAll("[data-copy-wechat]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText("bennyjob");
+          } catch {
+            const input = document.createElement("input");
+            input.value = "bennyjob";
+            document.body.append(input);
+            input.select();
+            document.execCommand("copy");
+            input.remove();
+          }
+          const normal = button.getAttribute("data-normal-label") || "Copy";
+          const copied = button.getAttribute("data-copied-label") || "Copied";
+          button.textContent = copied;
+          button.setAttribute("data-copied", "true");
+          setTimeout(() => {
+            button.textContent = normal;
+            button.removeAttribute("data-copied");
+          }, 1800);
+        });
+      });
+    </script></body></html>

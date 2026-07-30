@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><meta name="theme-color" content="#f4f5f2"><meta name="description" content="不是让两个 Agent 重复回答，而是让它们承担不同临床风险：一个优先召回，一个优先控制误报。"><meta name="author" content="Bin Huang"><link rel="canonical" href="https://benny108.github.io/zh/writing/radad-deep-dive/"><link rel="alternate" hreflang="en" href="https://benny108.github.io/en/writing/radad-deep-dive/"><link rel="alternate" hreflang="zh-CN" href="https://benny108.github.io/zh/writing/radad-deep-dive/"><link rel="alternate" hreflang="x-default" href="https://benny108.github.io/zh/"><link rel="icon" href="/favicon.png" type="image/png"><link rel="alternate" type="application/rss+xml" title="为什么医疗报告生成需要角色非对称的双 Agent｜黄彬 RSS" href="/zh/rss.xml"><meta property="og:type" content="article"><meta property="og:title" content="为什么医疗报告生成需要角色非对称的双 Agent｜黄彬"><meta property="og:description" content="不是让两个 Agent 重复回答，而是让它们承担不同临床风险：一个优先召回，一个优先控制误报。"><meta property="og:url" content="https://benny108.github.io/zh/writing/radad-deep-dive/"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://benny108.github.io/og.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="为什么医疗报告生成需要角色非对称的双 Agent｜黄彬"><meta name="twitter:description" content="不是让两个 Agent 重复回答，而是让它们承担不同临床风险：一个优先召回，一个优先控制误报。"><meta name="twitter:image" content="https://benny108.github.io/og.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"黄彬","alternateName":"Bin Huang","jobTitle":"LLM & Agent Research Engineer","email":"mailto:1084893712@qq.com","affiliation":{"@type":"CollegeOrUniversity","name":"Zhengzhou University"},"sameAs":["https://github.com/benny108","https://www.zhihu.com/people/42-29-40-28","https://space.bilibili.com/3493106871700084"],"url":"https://benny108.github.io"}</script><title>为什么医疗报告生成需要角色非对称的双 Agent｜黄彬</title><link rel="stylesheet" href="/_astro/global.BSG0MS1y.css"></head><body><a class="skip-link" href="#main-content">跳到正文</a><header class="site-header"><div class="shell header-inner"><a class="brand" href="/zh/" aria-label="黄彬首页"><span class="brand-mark">HB</span><span class="brand-copy"><strong>黄彬</strong><small>LLM · AGENT · RESEARCH</small></span></a><nav class="desktop-nav" aria-label="主导航"><a href="/zh/">首页</a><a href="/zh/research/">研究</a><a href="/zh/projects/">项目</a><a href="/zh/writing/" aria-current="page">写作</a><a href="/zh/about/">关于</a></nav><div class="header-actions"><a class="language-switch" href="/en/writing/radad-deep-dive/" data-lang-switch data-target-lang="en" aria-label="Switch to English"><span class="active">中</span><i>/</i><span class>EN</span></a><button class="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="打开导航"><span></span><span></span></button></div></div><nav id="mobile-menu" class="mobile-nav" data-mobile-menu aria-label="移动导航"><div class="shell"><a href="/zh/">首页</a><a href="/zh/research/">研究</a><a href="/zh/projects/">项目</a><a href="/zh/writing/" aria-current="page">写作</a><a href="/zh/about/">关于</a></div></nav></header><main id="main-content"><header class="detail-lede"><div class="shell"><div class="kicker">2026-07-30 · 8 MIN</div><h1>为什么医疗报告生成需要角色非对称的双 Agent</h1><p>不是让两个 Agent 重复回答，而是让它们承担不同临床风险：一个优先召回，一个优先控制误报。</p><div class="detail-metrics"><span>#Multi-Agent</span><span>#Medical AI</span><span>#RAG</span></div></div></header><section class="content-page"><div class="shell article-shell"><article class="prose"><p>单次大模型推理常把两个不同目标揉在一起：既要尽可能发现异常，又不能把不确定线索写成确诊结论。在胸部 CT 报告中，这不是普通的文本质量问题，而是召回与精确之间的临床风险权衡。</p>
+<h2 id="对称辩论为什么不够">对称辩论为什么不够</h2>
+<p>如果两个 Agent 拥有相同提示、相同目标和相同证据，它们很容易产生相关性很高的答案。表面上有“讨论”，实质上只是重复采样。RADAD 的核心不是增加 Agent 数量，而是设计角色差异：召回角色主动寻找可能遗漏的临床发现，审慎角色专门检查证据不足和过度推断。</p>
+<h2 id="共享证据锚点">共享证据锚点</h2>
+<p>系统先用 BiomedCLIP 编码 CT 图像，再从 FAISS 索引中检索视觉相似案例。两个 Agent 看到同一组案例，但按照不同风险偏好解释它们。这样，争论围绕可检查的证据展开，而不是围绕各自的语言直觉。</p>
+<h2 id="有限交互而非无限讨论">有限交互而非无限讨论</h2>
+<p>系统只使用 3 次图像调用和 4 步纯文本交互。限制轮数迫使协议把信息集中在“发现—质疑—修订”上，也让推理成本能够被测量。</p>
+<h2 id="结果如何理解">结果如何理解</h2>
+<p>BLEU-4 从 0.122 提升到 0.260，Macro-F1 从 0.368 提升到 0.437。指标提升只是结果，真正可迁移的部分是：先识别任务中的冲突目标，再为不同目标设计角色、证据和终止条件。</p>
+<blockquote>
+<p>这篇文章只解释公开方法与脱敏结果，不提供审稿中论文原文。</p>
+</blockquote></article><aside class="article-meta"><dl><dt>作者</dt><dd>黄彬</dd><dt>发布时间</dt><dd>2026-07-30</dd><dt>阅读时间</dt><dd>8 min</dd><dt>主题</dt><dd>Multi-Agent · Medical AI · RAG</dd></dl></aside></div></section><section class="contact-panel shell"><div><div class="kicker">CONTACT</div><h2>如果你正在寻找能把研究推进到结果的人</h2><p>欢迎交流 LLM / Agent 实习、科研合作、技术项目与博士研究机会。</p></div><div class="contact-actions"><a class="contact-link primary" href="mailto:1084893712@qq.com"><span>邮箱</span><strong>1084893712@qq.com</strong></a><a class="contact-link" href="https://github.com/benny108" target="_blank" rel="noreferrer"><span>GitHub</span><strong>github.com/benny108 ↗</strong></a><button class="contact-link" type="button" data-copy-wechat data-normal-label="复制微信号 · bennyjob" data-copied-label="已复制 bennyjob">复制微信号 · bennyjob</button></div></section></main><footer class="site-footer"><div class="shell footer-grid"><div><div class="footer-name">黄彬</div><p>研究、工程与真实世界结果。</p></div><div class="footer-links"><a href="mailto:1084893712@qq.com">Email</a><a href="https://github.com/benny108" target="_blank" rel="noreferrer">GitHub</a><a href="https://www.zhihu.com/people/42-29-40-28" target="_blank" rel="noreferrer">Zhihu</a><a href="https://space.bilibili.com/3493106871700084" target="_blank" rel="noreferrer">Bilibili</a></div><div class="footer-legal"><span>© 2026 Bin Huang</span><span>代码 MIT · 内容与素材保留版权</span></div></div></footer><script>
+      const menuButton = document.querySelector("[data-menu-toggle]");
+      const menu = document.querySelector("[data-mobile-menu]");
+      menuButton?.addEventListener("click", () => {
+        const isOpen = menuButton.getAttribute("aria-expanded") === "true";
+        menuButton.setAttribute("aria-expanded", String(!isOpen));
+        menu?.toggleAttribute("data-open", !isOpen);
+      });
+
+      document.querySelectorAll("[data-lang-switch]").forEach((link) => {
+        link.addEventListener("click", () => {
+          const target = link.getAttribute("data-target-lang");
+          if (target) localStorage.setItem("hb-locale", target);
+        });
+      });
+
+      document.querySelectorAll("[data-copy-wechat]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText("bennyjob");
+          } catch {
+            const input = document.createElement("input");
+            input.value = "bennyjob";
+            document.body.append(input);
+            input.select();
+            document.execCommand("copy");
+            input.remove();
+          }
+          const normal = button.getAttribute("data-normal-label") || "Copy";
+          const copied = button.getAttribute("data-copied-label") || "Copied";
+          button.textContent = copied;
+          button.setAttribute("data-copied", "true");
+          setTimeout(() => {
+            button.textContent = normal;
+            button.removeAttribute("data-copied");
+          }, 1800);
+        });
+      });
+    </script></body></html>

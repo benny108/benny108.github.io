@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><meta name="theme-color" content="#f4f5f2"><meta name="description" content="不仅追求更快，而是把速度、显存、画质、字幕与长时稳定性放到同一张生产验收表中。"><meta name="author" content="Bin Huang"><link rel="canonical" href="https://benny108.github.io/zh/projects/inference-production-gate/"><link rel="alternate" hreflang="en" href="https://benny108.github.io/en/projects/inference-production-gate/"><link rel="alternate" hreflang="zh-CN" href="https://benny108.github.io/zh/projects/inference-production-gate/"><link rel="alternate" hreflang="x-default" href="https://benny108.github.io/zh/"><link rel="icon" href="/favicon.png" type="image/png"><link rel="alternate" type="application/rss+xml" title="从 Benchmark 到 Production Gate：生成式 AI 推理加速｜黄彬 RSS" href="/zh/rss.xml"><meta property="og:type" content="article"><meta property="og:title" content="从 Benchmark 到 Production Gate：生成式 AI 推理加速｜黄彬"><meta property="og:description" content="不仅追求更快，而是把速度、显存、画质、字幕与长时稳定性放到同一张生产验收表中。"><meta property="og:url" content="https://benny108.github.io/zh/projects/inference-production-gate/"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://benny108.github.io/og.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="从 Benchmark 到 Production Gate：生成式 AI 推理加速｜黄彬"><meta name="twitter:description" content="不仅追求更快，而是把速度、显存、画质、字幕与长时稳定性放到同一张生产验收表中。"><meta name="twitter:image" content="https://benny108.github.io/og.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"黄彬","alternateName":"Bin Huang","jobTitle":"LLM & Agent Research Engineer","email":"mailto:1084893712@qq.com","affiliation":{"@type":"CollegeOrUniversity","name":"Zhengzhou University"},"sameAs":["https://github.com/benny108","https://www.zhihu.com/people/42-29-40-28","https://space.bilibili.com/3493106871700084"],"url":"https://benny108.github.io"}</script><title>从 Benchmark 到 Production Gate：生成式 AI 推理加速｜黄彬</title><link rel="stylesheet" href="/_astro/global.BSG0MS1y.css"></head><body><a class="skip-link" href="#main-content">跳到正文</a><header class="site-header"><div class="shell header-inner"><a class="brand" href="/zh/" aria-label="黄彬首页"><span class="brand-mark">HB</span><span class="brand-copy"><strong>黄彬</strong><small>LLM · AGENT · RESEARCH</small></span></a><nav class="desktop-nav" aria-label="主导航"><a href="/zh/">首页</a><a href="/zh/research/">研究</a><a href="/zh/projects/" aria-current="page">项目</a><a href="/zh/writing/">写作</a><a href="/zh/about/">关于</a></nav><div class="header-actions"><a class="language-switch" href="/en/projects/inference-production-gate/" data-lang-switch data-target-lang="en" aria-label="Switch to English"><span class="active">中</span><i>/</i><span class>EN</span></a><button class="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="打开导航"><span></span><span></span></button></div></div><nav id="mobile-menu" class="mobile-nav" data-mobile-menu aria-label="移动导航"><div class="shell"><a href="/zh/">首页</a><a href="/zh/research/">研究</a><a href="/zh/projects/" aria-current="page">项目</a><a href="/zh/writing/">写作</a><a href="/zh/about/">关于</a></div></nav></header><main id="main-content"><header class="detail-lede"><div class="shell"><div class="kicker">个人技术研究 · 2026</div><h1>从 Benchmark 到 Production Gate：生成式 AI 推理加速</h1><p>不仅追求更快，而是把速度、显存、画质、字幕与长时稳定性放到同一张生产验收表中。</p><div class="detail-metrics"><span>图像生成阶段约 2.35×</span><span>约 19.2 GB 常驻显存</span><span>视频热启动平均 19.541 秒</span></div></div></header><section class="content-page"><div class="shell article-shell"><article class="prose"><h2 id="问题">问题</h2>
+<p>“单次跑得快”不等于“可生产”。图像和视频生成还必须同时满足显存、清晰度、文字稳定性、音画一致性与长时成功率。</p>
+<h2 id="图像实验">图像实验</h2>
+<p>在统一的 Qwen-Image、1024×576、8 步设置下，对比两套量化推理路径。生成阶段从 2.284 秒降至 0.972 秒，约 2.35× 加速；同时记录常驻显存、峰值显存和画质取舍，避免只报告最有利指标。</p>
+<h2 id="视频实验">视频实验</h2>
+<p>测试 LTX-2.3 22B 蒸馏 GGUF Q4 的 8 步文生音视频流程。短时热启动平均 19.541 秒，但字幕乱码、长对话和黑帧问题仍未通过严格生产门槛。</p>
+<h2 id="结论">结论</h2>
+<p>结果被定义为“性能—质量边界研究”，而不是已经完成的生产交付。这套 Gate 思路让优化结论能够被复现、质疑和继续迭代。</p></article><aside class="article-meta"><dl><dt>角色</dt><dd>个人技术研究</dd><dt>时间</dt><dd>2026</dd><dt>技术标签</dt><dd>Inference · Quantization · Benchmark</dd><dt>公开边界</dt><dd>公开脱敏后的基准结果；内部路径、IP、业务 LoRA 和项目文件名均不进入网站。</dd></dl></aside></div></section><section class="contact-panel shell"><div><div class="kicker">CONTACT</div><h2>如果你正在寻找能把研究推进到结果的人</h2><p>欢迎交流 LLM / Agent 实习、科研合作、技术项目与博士研究机会。</p></div><div class="contact-actions"><a class="contact-link primary" href="mailto:1084893712@qq.com"><span>邮箱</span><strong>1084893712@qq.com</strong></a><a class="contact-link" href="https://github.com/benny108" target="_blank" rel="noreferrer"><span>GitHub</span><strong>github.com/benny108 ↗</strong></a><button class="contact-link" type="button" data-copy-wechat data-normal-label="复制微信号 · bennyjob" data-copied-label="已复制 bennyjob">复制微信号 · bennyjob</button></div></section></main><footer class="site-footer"><div class="shell footer-grid"><div><div class="footer-name">黄彬</div><p>研究、工程与真实世界结果。</p></div><div class="footer-links"><a href="mailto:1084893712@qq.com">Email</a><a href="https://github.com/benny108" target="_blank" rel="noreferrer">GitHub</a><a href="https://www.zhihu.com/people/42-29-40-28" target="_blank" rel="noreferrer">Zhihu</a><a href="https://space.bilibili.com/3493106871700084" target="_blank" rel="noreferrer">Bilibili</a></div><div class="footer-legal"><span>© 2026 Bin Huang</span><span>代码 MIT · 内容与素材保留版权</span></div></div></footer><script>
+      const menuButton = document.querySelector("[data-menu-toggle]");
+      const menu = document.querySelector("[data-mobile-menu]");
+      menuButton?.addEventListener("click", () => {
+        const isOpen = menuButton.getAttribute("aria-expanded") === "true";
+        menuButton.setAttribute("aria-expanded", String(!isOpen));
+        menu?.toggleAttribute("data-open", !isOpen);
+      });
+
+      document.querySelectorAll("[data-lang-switch]").forEach((link) => {
+        link.addEventListener("click", () => {
+          const target = link.getAttribute("data-target-lang");
+          if (target) localStorage.setItem("hb-locale", target);
+        });
+      });
+
+      document.querySelectorAll("[data-copy-wechat]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText("bennyjob");
+          } catch {
+            const input = document.createElement("input");
+            input.value = "bennyjob";
+            document.body.append(input);
+            input.select();
+            document.execCommand("copy");
+            input.remove();
+          }
+          const normal = button.getAttribute("data-normal-label") || "Copy";
+          const copied = button.getAttribute("data-copied-label") || "Copied";
+          button.textContent = copied;
+          button.setAttribute("data-copied", "true");
+          setTimeout(() => {
+            button.textContent = normal;
+            button.removeAttribute("data-copied");
+          }, 1800);
+        });
+      });
+    </script></body></html>
